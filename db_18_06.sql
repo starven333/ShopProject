@@ -57,6 +57,87 @@ CREATE TABLE OrderDetails
     FOREIGN KEY (isbn) REFERENCES Book(isbn)
 );
 
+-- Input Products
+DELIMITER //
+CREATE PROCEDURE inputProduct(
+IN p_category varchar(255), IN p_name VARCHAR(255), in p_size varchar(255), in p_color varchar(255), 
+IN p_price DECIMAL(10, 2), IN p_quantity INT
+)
+BEGIN
+	DECLARE existing_product_id INT;
+	declare existing_category int;
+    
+	SELECT category_id INTO existing_category FROM Categories
+    WHERE category_name = p_category;
+    
+	-- Check if the category already exists
+    if existing_category is null then 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Category not exist';
+    end if;
+		
+    -- Check if the product already exists
+    SELECT product_id INTO existing_product_id FROM Products
+    WHERE category_id = existing_category AND product_name = p_name 
+		and size = p_size and color = p_color and price = p_price;
+
+    IF existing_product_id IS NULL THEN
+        -- If the product doesn't exist, insert a new record
+        INSERT INTO Products (category_id, product_name, size, color, price, quantity)
+        VALUES (existing_category, p_name, p_size, p_color, p_price, p_quantity);
+    ELSE
+        -- If the product exists, update the quantity
+        UPDATE Products
+        SET quantity = quantity + p_quantity
+        WHERE product_id = existing_product_id;
+    END IF;
+END //
+DELIMITER ;
+
+-- Update Products
+DELIMITER //
+CREATE PROCEDURE product_exist(in p_product_id int, out id boolean)
+BEGIN
+	DECLARE existing_product_id INT;
+    
+	-- Check if the product already exists
+    SELECT product_id INTO existing_product_id FROM Products
+    WHERE product_id = p_product_id;
+    
+    IF existing_product_id IS NULL THEN
+		set id = false;
+    ELSE
+		set id = true;
+    END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE updateProduct(in p_id int, IN p_category varchar(255), IN p_name VARCHAR(255), 
+in p_size varchar(255), in p_color varchar(255), 
+IN p_price DECIMAL(10, 2), IN p_quantity INT)
+BEGIN
+	declare existing_category int;
+    
+	SELECT category_id INTO existing_category FROM Categories
+    WHERE category_name = p_category;
+    
+	-- Check if the category already exists
+    if existing_category is null then 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Category not exist';
+    end if;
+    
+    UPDATE Products
+    SET 
+        category_id = existing_category,
+        product_name = p_name,
+        size = p_size,
+        color = p_color,
+        price = p_price,
+        quantity = p_quantity
+	WHERE product_id = p_id;
+END //
+DELIMITER ;
+
 
 INSERT INTO User (login_name, login_password, user_name, phone, address)
 VALUES 
