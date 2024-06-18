@@ -34,18 +34,18 @@ public class DBHelper
     }
 }
 
-public class Product{
-    public int Id { set; get; }
+public class Book{
+    public int Isbn { set; get; }
     public string Category { set; get; }
     public string Name { set; get; }
-    public string Size { set; get; }
-    public string Color { set; get; }
+    public string Author { set; get; }
+    public string ReleaseDate { set; get; }
     public decimal Price { set; get; }
     public int Quantity { set; get; }
     public string Description { set; get; }
     private string query;
 
-    public void add_product(Product c){
+    public void add_product(Book c){
         MySqlCommand cmd = new MySqlCommand("inputProduct", DBHelper.OpenConnection());
         try {
             cmd.CommandType = CommandType.StoredProcedure;
@@ -76,7 +76,7 @@ public class Product{
         }
     }
     
-    public void update_product(Product c){
+    public void update_product(Book c){
         MySqlCommand cmd = new MySqlCommand("updateProduct", DBHelper.OpenConnection());
         try {
             cmd.CommandType = CommandType.StoredProcedure;
@@ -133,24 +133,17 @@ public class Product{
         }
         return result;
     }
-
 }
 
 public class User
 {
-    //private string connectionString = "Server=localhost;Database=UserDB;User ID=root;Password=yourpassword;";
-
     public int ID { get; private set; }
     public string Username { get; set; }
     public string Password { get; set; }
+    public string Name { get; set; }
+    public string Phone { get; set; }
+    public string Address { get; set; }
     public string Role { get; set; }
-
-    public User(string username, string password, string role)
-    {
-        Username = username;
-        Password = password;
-        Role = role;
-    }
 
     public void Save()
     {
@@ -169,26 +162,25 @@ public class User
         DBHelper.CloseConnection();
     }
 
-    public static User GetUserByUsername(string username)
+    public static User GetUser(string username, string password)
     {
-        User user = null;
-        string connectionString = "Server=localhost;Database=UserDB;User ID=root;Password=yourpassword;";
-
-        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        User user = new User();
+        using (MySqlConnection conn = DBHelper.OpenConnection())
         {
-            conn.Open();
-            string query = "SELECT * FROM Users WHERE Username = @Username";
+            string query = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
             using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Password", password);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        int id = reader.GetInt32("ID");
-                        string userPassword = reader.GetString("Password");
-                        string role = reader.GetString("Role");
-                        user = new User(username, userPassword, role) { ID = id };
+                        user.ID = reader.GetInt32("user_id");
+                        user.Name = reader.GetString("user_name");
+                        user.Phone = reader.GetString("phone");
+                        user.Address = reader.GetString("address");
+                        user.Role = reader.GetString("role");
                     }
                 }
             }
@@ -387,3 +379,4 @@ class Program{
         }
     }
 }
+//comment
