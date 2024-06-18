@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Work\\VTCA\\Project\\Code\\Code.csproj": {}
+    "D:\\Work\\VTCA\\Project\\ShopProject\\Code\\Code.csproj": {}
   },
   "projects": {
-    "D:\\Work\\VTCA\\Project\\Code\\Code.csproj": {
+    "D:\\Work\\VTCA\\Project\\ShopProject\\Code\\Code.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Work\\VTCA\\Project\\Code\\Code.csproj",
+        "projectUniqueName": "D:\\Work\\VTCA\\Project\\ShopProject\\Code\\Code.csproj",
         "projectName": "Code",
-        "projectPath": "D:\\Work\\VTCA\\Project\\Code\\Code.csproj",
+        "projectPath": "D:\\Work\\VTCA\\Project\\ShopProject\\Code\\Code.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\Work\\VTCA\\Project\\Code\\obj\\",
+        "outputPath": "D:\\Work\\VTCA\\Project\\ShopProject\\Code\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -44,6 +44,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.4.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
