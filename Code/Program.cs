@@ -2,6 +2,7 @@
 using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Spectre.Console;
 
 public class DBHelper
 {
@@ -222,7 +223,7 @@ public class User
         loginPass = Console.ReadLine();
 
         GetUser(loginName, loginPass);
-        
+
         if (Name != null)
         {
             Console.WriteLine("Login Success");
@@ -265,7 +266,6 @@ public class User
             switch (option)
             {
                 case 0:
-                    Console.WriteLine("\nExit Program.");
                     exit = true;
                     break;
                 case 1:
@@ -300,7 +300,6 @@ public class User
             switch (option)
             {
                 case 0:
-                    Console.WriteLine("\nExit Program.");
                     exit = true;
                     break;
                 case 1:
@@ -322,11 +321,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        int option = 0;
+        //int option = 0;
         bool exit = false;
-        User u = new User();
 
-        while (!exit)
+        /*while (!exit)
         {
             Console.WriteLine("\n--- Book Store ---");
             Console.WriteLine("1. Login");
@@ -334,6 +332,8 @@ class Program
             Console.WriteLine("0. exit");
             Console.Write("#Input option: ");
             option = Convert.ToInt32(Console.ReadLine());
+
+            User u = new User();
 
             switch (option)
             {
@@ -349,6 +349,33 @@ class Program
                     break;
                 default:
                     break;
+            }
+        }*/
+
+        while (true)
+        {
+            AnsiConsole.Clear();
+
+            User u = new User();
+
+            var option = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("What do you want to do?")
+                    .PageSize(10)
+                    .AddChoices(new[] {
+                        "Login", "Sign In", "Exit"
+                    }));
+
+            switch (option)
+            {
+                case "Login":
+                    u.Login();
+                    break;
+                case "Sign In":
+                    u.SignIn();
+                    break;
+                case "Exit":
+                    return;
             }
         }
     }
