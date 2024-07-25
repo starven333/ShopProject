@@ -1,3 +1,4 @@
+drop database bookstore;
 create database bookstore;
 
 USE BookStore;
@@ -10,7 +11,8 @@ CREATE TABLE Users
     user_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
     address VARCHAR(255),
-    user_role int default 0
+    user_role int default 0,
+    user_status int default 1
 );
 
 CREATE TABLE Categories
@@ -22,7 +24,7 @@ CREATE TABLE Categories
 CREATE TABLE Author
 (
     author_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    author_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Book
@@ -34,35 +36,28 @@ CREATE TABLE Book
     release_date DATE,
     price DECIMAL(10, 2),
     quantity INT,
-    product_des TEXT,
+    product_des TEXT default ('No Des'),
     FOREIGN KEY (category_id) REFERENCES Categories(category_id),
     FOREIGN KEY (author_id) REFERENCES Author(author_id)
-);
-
-CREATE TABLE Orders
-(
-    order_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    order_date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE OrderDetails
 (
     order_detail_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
+	user_id INT,
+    order_date DATETIME default current_timestamp(),
     isbn VARCHAR(20),
     quantity INT NOT NULL,
-    unit_price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    total_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (isbn) REFERENCES Book(isbn)
 );
 
-INSERT INTO Users (login_name, login_password, user_name, phone, address)
+INSERT INTO Users (login_name, login_password, user_name, phone, address, user_role)
 VALUES 
-('john', '123', 'John Doe', '1234567890', '123 Elm Street'),
-('jane', '123', 'Jane Smith', '0987654321', '456 Oak Avenue');
-
+('john', '123', 'John Doe', '1234567890', '123 Elm Street', 0),
+('jane', '123', 'Jane Smith', '0987654321', '456 Oak Avenue', 0),
+('admin1', '123', 'Jake Pear', '0987123321', '41 Oasis Street', 1);
 
 INSERT INTO Categories (category_name)
 VALUES 
@@ -71,7 +66,7 @@ VALUES
 ('Science Fiction'),
 ('Biography');
 
-INSERT INTO Author (name)
+INSERT INTO Author (author_name)
 VALUES 
 ('J.K. Rowling'),
 ('George R.R. Martin'),
@@ -85,14 +80,10 @@ VALUES
 ('book-03', 3, 3, 'Foundation', '1951-05-01', 14.99, 40, 'A science fiction novel about the fall and rise of a Galactic Empire.'),
 ('book-04', 4, 4, 'Steve Jobs', '2011-10-24', 24.99, 20, 'A biography of Steve Jobs, the co-founder of Apple Inc.');
 
-INSERT INTO Orders (user_id, order_date)
-VALUES 
-(1, '2024-06-15'),
-(2, '2024-06-16');
 
-INSERT INTO OrderDetails (order_id, isbn, quantity, unit_price)
+INSERT INTO OrderDetails (user_id, isbn, quantity, total_price)
 VALUES 
-(1, 'book-01', 2, 19.99),
+(1, 'book-01', 2, 2*19.99),
 (1, 'book-02', 1, 14.99),
 (2, 'book-03', 1, 29.99),
 (2, 'book-04', 1, 24.99);

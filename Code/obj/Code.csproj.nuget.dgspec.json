@@ -48,6 +48,14 @@
             "MySql.Data": {
               "target": "Package",
               "version": "[8.4.0, )"
+            },
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.49.1, )"
+            },
+            "Spectre.Console.Cli": {
+              "target": "Package",
+              "version": "[0.49.1, )"
             }
           },
           "imports": [

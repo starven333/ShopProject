@@ -39,3 +39,8 @@ d:\Work\VTCA\Project\ShopProject\Code\obj\Debug\net8.0\refint\Code.dll
 d:\Work\VTCA\Project\ShopProject\Code\obj\Debug\net8.0\Code.pdb
 D:\Work\VTCA\Project\ShopProject\Code\obj\Debug\net8.0\Code.genruntimeconfig.cache
 D:\Work\VTCA\Project\ShopProject\Code\obj\Debug\net8.0\ref\Code.dll
+D:\Work\VTCA\Project\ShopProject\Code\bin\Debug\net8.0\Spectre.Console.dll
+D:\Work\VTCA\Project\ShopProject\Code\bin\Debug\net8.0\Spectre.Console.Cli.dll
+D:\Work\VTCA\Project\ShopProject\Code\bin\Debug\net8.0\de\Spectre.Console.Cli.resources.dll
+D:\Work\VTCA\Project\ShopProject\Code\bin\Debug\net8.0\fr\Spectre.Console.Cli.resources.dll
+D:\Work\VTCA\Project\ShopProject\Code\bin\Debug\net8.0\sv\Spectre.Console.Cli.resources.dll

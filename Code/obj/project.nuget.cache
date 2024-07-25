@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JbGj2pfFp7dikIQwNjd9m5XV7gOxTU/1dwpKuiJib5B/SbsJe3Mt6JcqOCiuhWcRc6HuV6xFynx+Xutig/9SpA==",
+  "dgSpecHash": "TbpnruUAhV1+/j3LuWXjSdEBxYNXiJXf0to/jAqzoU7pqJHbyaBnsdp8Syaj21DCUEoLnLKPpEN2aVhE/HSCFA==",
   "success": true,
   "projectFilePath": "D:\\Work\\VTCA\\Project\\ShopProject\\Code\\Code.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,8 @@
     "C:\\Users\\ADMIN\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\mysql.data\\8.4.0\\mysql.data.8.4.0.nupkg.sha512",
+    "C:\\Users\\ADMIN\\.nuget\\packages\\spectre.console\\0.49.1\\spectre.console.0.49.1.nupkg.sha512",
+    "C:\\Users\\ADMIN\\.nuget\\packages\\spectre.console.cli\\0.49.1\\spectre.console.cli.0.49.1.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\system.configuration.configurationmanager\\4.4.1\\system.configuration.configurationmanager.4.4.1.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\system.diagnostics.diagnosticsource\\7.0.2\\system.diagnostics.diagnosticsource.7.0.2.nupkg.sha512",
