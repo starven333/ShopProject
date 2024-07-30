@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0" version="24.7.5">
+  <diagram id="1KTuHrnLQf42WpVjNYhv" name="Page-1">
+    <mxGraphModel dx="834" dy="460" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-10" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="470" y="280" width="160" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-7" value="" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;rotation=0;size=20;direction=west;flipH=0;flipV=1;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-10">
+          <mxGeometry width="160" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-8" value="&lt;b&gt;DATABASE SERVER&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-10">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-9" value="MySQL Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-10">
+          <mxGeometry x="25" y="75" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-11" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="170" y="270" width="170" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-1" value="" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;rotation=0;size=20;direction=west;flipH=0;flipV=1;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-11">
+          <mxGeometry width="170" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-3" value="&lt;b&gt;PC/LAPTOP&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-11">
+          <mxGeometry x="28.75" y="30" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-4" value="ProjBookStore.zip" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-11">
+          <mxGeometry x="22.5" y="70" width="102.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-5" value="DR" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="d0UtalQEoyz_nRjlH0sp-11">
+          <mxGeometry x="37.5" y="140" width="72.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-6" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="d0UtalQEoyz_nRjlH0sp-11" source="d0UtalQEoyz_nRjlH0sp-4" target="d0UtalQEoyz_nRjlH0sp-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="90" y="130" as="sourcePoint" />
+            <mxPoint x="140" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d0UtalQEoyz_nRjlH0sp-12" value="&lt;b&gt;TCP/IP&lt;/b&gt;" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0;exitDx=0;exitDy=85;exitPerimeter=0;entryX=0;entryY=0;entryDx=160;entryDy=75;entryPerimeter=0;verticalAlign=bottom;" edge="1" parent="1" source="d0UtalQEoyz_nRjlH0sp-1" target="d0UtalQEoyz_nRjlH0sp-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="460" as="sourcePoint" />
+            <mxPoint x="440" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

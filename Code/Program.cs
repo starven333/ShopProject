@@ -52,6 +52,28 @@ public class Book
 
     public void bookInfo(Book c)
     {
+        string query = @$"SELECT * FROM book 
+                        join categories on book.category_id = categories.category_id 
+                        join author on book.author_id = author.author_id
+                        WHERE isbn = '{c.Isbn}';";
+
+        DBHelper.OpenConnection();
+
+        using (MySqlDataReader reader = DBHelper.ExecQuery(query))
+        {
+            if (reader.Read())
+            {
+                c.Name = reader.GetString("book_name");
+                c.Category = reader.GetString("category_name");
+                c.Author = reader.GetString("author_name");
+                c.ReleaseDate = DateOnly.FromDateTime(reader.GetDateTime("release_date"));
+                c.Price = reader.GetDecimal("price");
+                c.Quantity = reader.GetInt32("quantity");
+            }
+        }
+
+        DBHelper.CloseConnection();
+
         AnsiConsole.MarkupLine("[green]---Book Info---[/]");
         Console.WriteLine($"ISBN: {c.Isbn}");
         Console.WriteLine($"Category: {c.Category}");
@@ -154,47 +176,53 @@ public class Book
 
     public void updateBook(Book c)
     {
-        AnsiConsole.Clear();
 
-        if (c == null) return;
-        c.bookInfo(c);
-
-        var option = AnsiConsole.Prompt(
-        new SelectionPrompt<string>()
-            .Title("\n-Select What to Change:")
-            .PageSize(1000)
-            .AddChoices(new[] {
-                    "Category", "Name", "Author", "Release Date", "Price", "Quantity", "Exit"
-                }));
-
-        switch (option)
+        while (true)
         {
-            case "Category":
-                c.Category = AnsiConsole.Ask<string>($"\nEnter new [green]Category[/]:");
-                c.infoChange(c);
-                break;
-            case "Name":
-                c.Name = AnsiConsole.Ask<string>($"\nEnter new [green]Name[/]:");
-                c.infoChange(c);
-                break;
-            case "Author":
-                c.Author = AnsiConsole.Ask<string>($"\nEnter new [green]Author[/]:");
-                c.infoChange(c);
-                break;
-            case "Release Date":
-                c.ReleaseDate = AnsiConsole.Ask<DateOnly>($"\nEnter new [green]Release Date(yyyy/mm/dd)[/]:");
-                c.infoChange(c);
-                break;
-            case "Price":
-                while (c.Price < 0) c.Price = AnsiConsole.Ask<Decimal>($"\nEnter new [green]Price[/]:");
-                c.infoChange(c);
-                break;
-            case "Quantity":
-                while (c.Quantity < 0) c.Quantity = AnsiConsole.Ask<int>($"\nEnter new [green]Quantity[/]:");
-                c.infoChange(c);
-                break;
-            case "Exit":
-                return;
+            AnsiConsole.Clear();
+
+            if (c == null) return;
+            c.bookInfo(c);
+
+            var option = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("\n-Select What to Change:")
+                .PageSize(1000)
+                .AddChoices(new[] {
+                    "Category", "Name", "Author", "Release Date", "Price", "Quantity", "Exit"
+                    }));
+
+            switch (option)
+            {
+                case "Category":
+                    c.Category = AnsiConsole.Ask<string>($"\nEnter new [green]Category[/]:");
+                    c.infoChange(c);
+                    break;
+                case "Name":
+                    c.Name = AnsiConsole.Ask<string>($"\nEnter new [green]Name[/]:");
+                    c.infoChange(c);
+                    break;
+                case "Author":
+                    c.Author = AnsiConsole.Ask<string>($"\nEnter new [green]Author[/]:");
+                    c.infoChange(c);
+                    break;
+                case "Release Date":
+                    c.ReleaseDate = AnsiConsole.Ask<DateOnly>($"\nEnter new [green]Release Date(yyyy/mm/dd)[/]:");
+                    c.infoChange(c);
+                    break;
+                case "Price":
+                    c.Price = AnsiConsole.Ask<Decimal>($"\nEnter new [green]Price[/]:");
+                    while (c.Price < 0) c.Price = AnsiConsole.Ask<Decimal>($"\nEnter new [green]Price[/]:");
+                    c.infoChange(c);
+                    break;
+                case "Quantity":
+                    c.Quantity = AnsiConsole.Ask<int>($"\nEnter new [green]Quantity[/]:");
+                    while (c.Quantity < 0) c.Quantity = AnsiConsole.Ask<int>($"\nEnter new [green]Quantity[/]:");
+                    c.infoChange(c);
+                    break;
+                case "Exit":
+                    return;
+            }
         }
     }
 
@@ -202,8 +230,8 @@ public class Book
     {
         try
         {
-            //"Category", "Name", "Author", "Release Date", "Price", "Quantity"
             char opt = 'n';
+            opt = 'n';
             opt = AnsiConsole.Ask<char>("[yellow]Confirm(y/n)[/]:");
 
             if (opt == 'y')
@@ -231,6 +259,9 @@ public class Book
     public Book bookSelector(List<Book> books)
     {
         int selectedIndex = 0;
+        int rowsPerPage = 10;
+        int totalPages = (int)Math.Ceiling((double)books.Count / rowsPerPage);
+        int currentPage = 0;
 
         while (true)
         {
@@ -244,10 +275,13 @@ public class Book
             table.AddColumn("Quantity");
             table.AddColumn("Description");
 
-            for (int i = 0; i < books.Count; i++)
+            var data = books.Skip(currentPage * rowsPerPage).Take(rowsPerPage).ToList();
+
+            for (int i = 0; i < data.Count; i++)
             {
-                var b = books[i];
-                var rowStyle = i == selectedIndex ? "green" : "";
+                var b = data[i];
+                var rowStyle = i == selectedIndex % rowsPerPage ? "green" : "";
+
                 table.AddRow(
                     new Markup($"[{rowStyle}]{b.Isbn}[/]"),
                     new Markup($"[{rowStyle}]{b.Name}[/]"),
@@ -260,22 +294,43 @@ public class Book
                 );
             }
 
+
             AnsiConsole.Clear();
             AnsiConsole.Write(table);
+
+            AnsiConsole.WriteLine($"\nPage {currentPage + 1} of {totalPages} (Select <-/-> to move page)");
 
             var key = Console.ReadKey(true).Key;
 
             if (key == ConsoleKey.UpArrow)
             {
+                if (selectedIndex % rowsPerPage == 0) currentPage = currentPage - 1;
+                if (currentPage < 0) currentPage = totalPages - 1;
+
                 selectedIndex = (selectedIndex - 1 + books.Count) % books.Count;
             }
             else if (key == ConsoleKey.DownArrow)
             {
                 selectedIndex = (selectedIndex + 1) % books.Count;
+                if (selectedIndex % rowsPerPage == 0) currentPage = (currentPage + 1) % totalPages;
             }
             else if (key == ConsoleKey.Escape)
             {
                 throw new ArgumentException("Exit!");
+            }
+            else if (key == ConsoleKey.RightArrow)
+            {
+                currentPage = (currentPage + 1) % totalPages;
+                selectedIndex = currentPage*rowsPerPage;
+                if (selectedIndex > books.Count) selectedIndex = selectedIndex % books.Count;
+                
+            }
+            else if (key == ConsoleKey.LeftArrow)
+            {
+                currentPage = (currentPage == 0) ? totalPages - 1 : currentPage - 1;
+                selectedIndex = currentPage*rowsPerPage;
+                if (selectedIndex > books.Count) selectedIndex = selectedIndex % books.Count;
+                
             }
             else if (key == ConsoleKey.Enter)
             {
@@ -293,7 +348,9 @@ public class Book
 
         Console.Write("\nEnter book name:");
         input = Console.ReadLine();
-        query = $"SELECT* FROM book JOIN author ON book.author_id = author.author_id JOIN categories ON book.category_id = categories.category_id where book_name like '{input}%';";
+        query = @$"SELECT* FROM book JOIN author ON book.author_id = author.author_id 
+                    JOIN categories ON book.category_id = categories.category_id 
+                    where book_name like '%{input}%' order by book_name;";
 
         DBHelper.OpenConnection();
 
@@ -331,7 +388,9 @@ public class Book
 
         Console.Write("\nEnter category name:");
         input = Console.ReadLine();
-        query = $"SELECT* FROM book JOIN author ON book.author_id = author.author_id JOIN categories ON book.category_id = categories.category_id where category_name like '{input}%';";
+        query = @$"SELECT* FROM book JOIN author ON book.author_id = author.author_id 
+                JOIN categories ON book.category_id = categories.category_id
+                where category_name like '%{input}%' order by book_name;";
 
         DBHelper.OpenConnection();
 
@@ -618,7 +677,7 @@ public class User
 
         DBHelper.CloseConnection();
 
-        if (users.Count == 0) return null;
+        if (users.Count == 0) throw new ArgumentException("No User Found!");
 
         return userSelector(users);
     }
@@ -632,12 +691,34 @@ public class User
     public void SignIn()
     {
         Username = AnsiConsole.Ask<string>("Enter your [green]username[/]:");
+
+        string query = $"SELECT COUNT(*) FROM users WHERE login_name = '{Username}';";
+        int count = 0;
+
+        using (MySqlCommand command = new MySqlCommand(query, DBHelper.OpenConnection()))
+        {
+            count = Convert.ToInt32(command.ExecuteScalar());
+            DBHelper.CloseConnection();
+        }
+
+        if (count > 0)
+        {
+            AnsiConsole.MarkupLine("[red]Username exist![/]");
+            Console.ReadLine();
+            return;
+        }
+
         Password = AnsiConsole.Ask<string>("Enter your [green]password[/]:");
         Name = AnsiConsole.Ask<string>("Enter your [green]full name[/]:");
         Phone = AnsiConsole.Ask<string>("Enter your [green]phone number[/]:");
         Address = AnsiConsole.Ask<string>("Enter your [green]address[/]:");
 
-        userSave();
+        char opt = AnsiConsole.Ask<char>("[yellow]Confirm(y/n)[/]:");
+
+        if (opt == 'y')
+        {
+            userSave();
+        }
     }
 
     public int Login(string loginName, string loginPass)
@@ -745,25 +826,33 @@ class Program
 {
     public static void loginMenu(User u)
     {
-        char opt = 'y';
-        while (opt != 'n')
+        try
         {
-            AnsiConsole.Clear();
+            char opt = 'y';
+            while (opt != 'n')
+            {
+                AnsiConsole.Clear();
 
-            var username = AnsiConsole.Ask<string>("Enter your [green]username[/]:");
+                var username = AnsiConsole.Ask<string>("Enter your [green]username[/]:");
 
-            var password = AnsiConsole.Prompt(
-                new TextPrompt<string>("Enter your [green]password[/]:")
-                    .PromptStyle("red")
-                    .Secret());
+                var password = AnsiConsole.Prompt(
+                    new TextPrompt<string>("Enter your [green]password[/]:")
+                        .PromptStyle("red")
+                        .Secret());
 
-            int i = u.Login(username, password);
+                int i = u.Login(username, password);
 
-            if (i == 2) { userMenu(u); return; }
-            else if (i == 1) { adminMenu(u); return; }
-            else AnsiConsole.Markup("[red]User Not Found![/]\n");
+                if (i == 2) { userMenu(u); return; }
+                else if (i == 1) { adminMenu(u); return; }
+                else AnsiConsole.Markup("[red]User Not Found![/]\n");
 
-            opt = AnsiConsole.Ask<char>("[yellow]Continue(y/n)[/]:");
+                opt = AnsiConsole.Ask<char>("[yellow]Continue(y/n)[/]:");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.ReadLine();
         }
     }
 
