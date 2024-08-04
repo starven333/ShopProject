@@ -172,6 +172,8 @@ public class Book
         }
         DBHelper.CloseConnection();
 
+        Console.WriteLine("Book Added Success!");
+        Console.ReadLine();
     }
 
     public void updateBook(Book c)
@@ -246,6 +248,9 @@ public class Book
                 {
                     cmd.ExecuteNonQuery();
                 }
+
+                Console.WriteLine("Update Success!");
+                Console.ReadLine();
             }
         }
         catch (Exception ex)
@@ -321,16 +326,16 @@ public class Book
             else if (key == ConsoleKey.RightArrow)
             {
                 currentPage = (currentPage + 1) % totalPages;
-                selectedIndex = currentPage*rowsPerPage;
+                selectedIndex = currentPage * rowsPerPage;
                 if (selectedIndex > books.Count) selectedIndex = selectedIndex % books.Count;
-                
+
             }
             else if (key == ConsoleKey.LeftArrow)
             {
                 currentPage = (currentPage == 0) ? totalPages - 1 : currentPage - 1;
-                selectedIndex = currentPage*rowsPerPage;
+                selectedIndex = currentPage * rowsPerPage;
                 if (selectedIndex > books.Count) selectedIndex = selectedIndex % books.Count;
-                
+
             }
             else if (key == ConsoleKey.Enter)
             {
@@ -578,6 +583,9 @@ public class User
                     cmd.ExecuteNonQuery();
                 }
                 DBHelper.CloseConnection();
+
+                Console.WriteLine("Update Success!");
+                Console.ReadLine();
             }
         }
         catch (Exception ex)
@@ -690,22 +698,24 @@ public class User
 
     public void SignIn()
     {
-        Username = AnsiConsole.Ask<string>("Enter your [green]username[/]:");
+        int count = 1;
 
-        string query = $"SELECT COUNT(*) FROM users WHERE login_name = '{Username}';";
-        int count = 0;
-
-        using (MySqlCommand command = new MySqlCommand(query, DBHelper.OpenConnection()))
+        while (count > 0)
         {
-            count = Convert.ToInt32(command.ExecuteScalar());
-            DBHelper.CloseConnection();
-        }
+            Username = AnsiConsole.Ask<string>("Enter your [green]username[/]:");
 
-        if (count > 0)
-        {
-            AnsiConsole.MarkupLine("[red]Username exist![/]");
-            Console.ReadLine();
-            return;
+            string query = $"SELECT COUNT(*) FROM users WHERE login_name = '{Username}';";
+
+            using (MySqlCommand command = new MySqlCommand(query, DBHelper.OpenConnection()))
+            {
+                count = Convert.ToInt32(command.ExecuteScalar());
+                DBHelper.CloseConnection();
+            }
+
+            if (count > 0)
+            {
+                AnsiConsole.MarkupLine("[red]Username exist![/]");
+            }
         }
 
         Password = AnsiConsole.Ask<string>("Enter your [green]password[/]:");
@@ -718,6 +728,8 @@ public class User
         if (opt == 'y')
         {
             userSave();
+            Console.WriteLine("Sign In Success!");
+            Console.ReadLine();
         }
     }
 
@@ -736,11 +748,34 @@ public class User
         }
     }
 
-    public void updateUserStatus(User u, int i)
+    public void updateUserStatus(User u)
     {
+        int i = 0;
+
         try
         {
             u = u.SearchUserByName();
+
+            var option = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("\n[green]--Select an Option--[/]")
+                .PageSize(1000)
+                .AddChoices(new[] {
+                    "Activate User", "Deactivate User", "Exit"
+                    }));
+
+            switch (option)
+            {
+                case "Activate User":
+                    i = 1;
+                    break;
+                case "Deactivate User":
+                    i = 0;
+                    break;
+                case "Exit":
+                    return;
+            }
+
             char opt = AnsiConsole.Ask<char>("[yellow]Confirm(y/n)[/]:");
 
             if (opt == 'y')
@@ -750,6 +785,9 @@ public class User
                 {
                     cmd.ExecuteNonQuery();
                 }
+
+                Console.WriteLine("Update Success!");
+                Console.ReadLine();
             }
         }
         catch (Exception ex)
@@ -818,6 +856,9 @@ public class Order
                 cmd.ExecuteNonQuery();
             }
             DBHelper.CloseConnection();
+
+            Console.WriteLine("Order Created!");
+            Console.ReadLine();
         }
     }
 }
@@ -963,31 +1004,34 @@ class Program
 
     public static void updateInfoMenu(User u)
     {
-        AnsiConsole.Clear();
-
-        u.userInfo(u);
-
-        var option = AnsiConsole.Prompt(
-        new SelectionPrompt<string>()
-            .Title("\n-Select What to Change:")
-            .PageSize(1000)
-            .AddChoices(new[] {
-                    "Fullname", "Phone Number", "Address","Exit"
-                }));
-
-        switch (option)
+        while (true)
         {
-            case "Fullname":
-                u.updateInfo(u, "user_name", "Fullname");
-                break;
-            case "Phone Number":
-                u.updateInfo(u, "phone", "Phone Number");
-                break;
-            case "Address":
-                u.updateInfo(u, "address", "Address");
-                break;
-            case "Exit":
-                return;
+            AnsiConsole.Clear();
+
+            u.userInfo(u);
+
+            var option = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("\n-Select What to Change:")
+                .PageSize(1000)
+                .AddChoices(new[] {
+                    "Fullname", "Phone Number", "Address","Exit"
+                    }));
+
+            switch (option)
+            {
+                case "Fullname":
+                    u.updateInfo(u, "user_name", "Fullname");
+                    break;
+                case "Phone Number":
+                    u.updateInfo(u, "phone", "Phone Number");
+                    break;
+                case "Address":
+                    u.updateInfo(u, "address", "Address");
+                    break;
+                case "Exit":
+                    return;
+            }
         }
     }
 
@@ -1049,18 +1093,17 @@ class Program
                     Book c = new Book();
 
                     c.Isbn = AnsiConsole.Ask<string>("Enter book's [green]ISBN[/]:");
-                    if (c.bookExist(c.Isbn))
+                    while (c.bookExist(c.Isbn))
                     {
                         AnsiConsole.MarkupLine("[red]Book Exist![/]");
-                        Console.ReadLine();
-                        return;
+                        c.Isbn = AnsiConsole.Ask<string>("Enter book's [green]ISBN[/]:");
                     }
 
                     c.Name = AnsiConsole.Ask<string>("Enter book's [green]Title[/]:");
                     c.Author = AnsiConsole.Ask<string>("Enter book's [green]Author[/]:");
                     c.Category = AnsiConsole.Ask<string>("Enter book's [green]Category[/]:");
-                    while (c.Price < 0) c.Price = AnsiConsole.Ask<decimal>("Enter book's [green]Price[/]:");
-                    while (c.Quantity < 0) c.Quantity = AnsiConsole.Ask<int>("Enter book's [green]Quantity[/]:");
+                    while (c.Price <= 0) c.Price = AnsiConsole.Ask<decimal>("Enter book's [green]Price[/]:");
+                    while (c.Quantity <= 0) c.Quantity = AnsiConsole.Ask<int>("Enter book's [green]Quantity[/]:");
                     c.ReleaseDate = AnsiConsole.Ask<DateOnly>("Enter book's [green]Release Date(yyyy/mm/dd)[/]:");
                     string date = c.ReleaseDate.ToString("yyyy-MM-dd");
 
@@ -1089,31 +1132,7 @@ class Program
         try
         {
             User u = new User();
-
-            while (true)
-            {
-                AnsiConsole.Clear();
-
-                var option = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("\n[green]--Select an Option--[/]")
-                    .PageSize(1000)
-                    .AddChoices(new[] {
-                    "Activate User", "Deactivate User", "Exit"
-                        }));
-
-                switch (option)
-                {
-                    case "Activate User":
-                        u.updateUserStatus(u, 1);
-                        break;
-                    case "Deactivate User":
-                        u.updateUserStatus(u, 0);
-                        break;
-                    case "Exit":
-                        return;
-                }
-            }
+            u.updateUserStatus(u);
         }
         catch (Exception ex)
         {

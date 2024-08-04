@@ -6,7 +6,7 @@ USE BookStore;
 CREATE TABLE Users
 (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    login_name VARCHAR(50) NOT NULL,
+    login_name VARCHAR(50) NOT NULL UNIQUE,
     login_password VARCHAR(50) NOT NULL,
     user_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
