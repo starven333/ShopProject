@@ -934,12 +934,13 @@ class Program
 
     public static void PurchaseMenu(User u)
     {
-        try
+        while (true)
         {
-            Book b = new Book();
-
-            while (true)
+            try
             {
+                Book b = new Book();
+
+
                 AnsiConsole.Clear();
 
                 var option = AnsiConsole.Prompt(
@@ -965,12 +966,13 @@ class Program
                     case "Exit":
                         return;
                 }
+
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("\nNo book found!");
-            Console.ReadLine();
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nNo book found!");
+                Console.ReadLine();
+            }
         }
     }
 
